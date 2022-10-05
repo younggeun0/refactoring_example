@@ -7,12 +7,13 @@ const plays = require("./plays.json");
 // 2. 결과를 텍스트나 HTML로 표현(포맷팅 단계)
 
 function statement(invoice, plays) {
-    const statementData = {};   // 중간 데이터 구조 역할을 할 객체 생성
+    const statementData = {};
+    statementData.customer = invoice.customer; // 고객 데이터를 중간 데이터로 옮김
     return renderPlainText(statementData, invoice, plays);
 }
 
-function renderPlainText(data, invoice, plays) { // 중간 데이터 구조를 인수로 전달
-    let result = `청구 내역 (고객명: ${invoice.customer})\n`;
+function renderPlainText(data, invoice, plays) {
+    let result = `청구 내역 (고객명: ${data.customer})\n`; // 고객 데이터를 중간 데이터로부터 받음
 
     for (let perf of invoice.performances) {
         result += ` ${playFor(perf).name}: ${usd(amountFor(perf))} (${perf.audience}석)\n`;
