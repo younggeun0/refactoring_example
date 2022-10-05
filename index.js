@@ -14,7 +14,7 @@ function statement(invoice, plays) {
     return result;
 
 
-    // 변수를 인라인해서 임시변수 제거 후 의미있게 함수명 수정
+    // 여기서부터 중첩 함수 시작... 난무하는 중첩 함수
     function totalAmount() {
         let result = 0;
         for (let perf of invoice.performances) {
