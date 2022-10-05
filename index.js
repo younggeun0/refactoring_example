@@ -9,8 +9,14 @@ const plays = require("./plays.json");
 function statement(invoice, plays) {
     const statementData = {};
     statementData.customer = invoice.customer;
-    statementData.performances = invoice.performances;
+    statementData.performances = invoice.performances.map(enrichPerformance);
     return renderPlainText(statementData, plays);
+
+    // 연극 제목도 중간 데이터 구조에서 가져오도록 하기 위해 공연 정보 레코드에 연극 데이터를 추가해야 함
+    function enrichPerformance(aPerformance) {
+        const result = Object.assign({}, aPerformance); // 얕은 복사 수행
+        return result;
+    }
 }
 
 function renderPlainText(data, plays) {
