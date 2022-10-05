@@ -11,16 +11,19 @@ function statement(invoice, plays) {
         totalAmount += amountFor(perf);
     }
 
-    // 문장 슬라이드하기
-    let volumeCredits = 0;
-    for (let perf of invoice.performances) {
-        volumeCredits += volumeCreditsFor(perf);
-    }
-
+    let volumeCredits = totalVolumeCredits();
     result += `총액: ${usd(totalAmount)}\n`;
     result += `적립 포인트: ${volumeCredits}\n`;
     return result;
 
+
+    function totalVolumeCredits() { // 함수로 추출
+        let volumeCredits = 0;
+        for (let perf of invoice.performances) {
+            volumeCredits += volumeCreditsFor(perf);
+        }
+        return volumeCredits;
+    }
 
     function usd(aNumber) {
         return new Intl.NumberFormat("en-US", {
