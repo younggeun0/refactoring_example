@@ -8,16 +8,14 @@ function statement(invoice, plays) {
         // 청구 내역을 출력한다.
         result += ` ${playFor(perf).name}: ${usd(amountFor(perf))} (${perf.audience}석)\n`;
     }
-    let totalAmount = amuFunction();
 
-    result += `총액: ${usd(totalAmount)}\n`;
+    result += `총액: ${usd(totalAmount())}\n`;
     result += `적립 포인트: ${totalVolumeCredits()}\n`;
     return result;
 
 
-    // totalAmount도 똑같은 절차로 제거
-    // totalAmount란 변수명이 있어 일단 아무함수로 이름을 붙임
-    function amuFunction() {
+    // 변수를 인라인해서 임시변수 제거 후 의미있게 함수명 수정
+    function totalAmount() {
         let totalAmount = 0;
         for (let perf of invoice.performances) {
             totalAmount += amountFor(perf);
