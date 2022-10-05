@@ -18,6 +18,7 @@ function renderPlainText(data) {
     return result;
 }
 
+// 단계 쪼개기로 데이터 처리를 모듈화한 덕분에 계산 코드를 중복하지 않고도 HTML 버전을 만들 수 있었음
 function htmlStatement(invoice, plays) {
     return renderHtml(createStatementData(invoice, plays));
 }
