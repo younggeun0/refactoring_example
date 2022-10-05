@@ -2,19 +2,28 @@ const invoices = require("./invoices.json");
 const plays = require("./plays.json");
 
 function statement(invoice, plays) {
-    let totalAmount = 0;
     let result = `청구 내역 (고객명: ${invoice.customer})\n`;
 
     for (let perf of invoice.performances) {
         // 청구 내역을 출력한다.
         result += ` ${playFor(perf).name}: ${usd(amountFor(perf))} (${perf.audience}석)\n`;
-        totalAmount += amountFor(perf);
     }
+    let totalAmount = amuFunction();
 
     result += `총액: ${usd(totalAmount)}\n`;
-    result += `적립 포인트: ${totalVolumeCredits()}\n`; // 변수를 인라인
+    result += `적립 포인트: ${totalVolumeCredits()}\n`;
     return result;
 
+
+    // totalAmount도 똑같은 절차로 제거
+    // totalAmount란 변수명이 있어 일단 아무함수로 이름을 붙임
+    function amuFunction() {
+        let totalAmount = 0;
+        for (let perf of invoice.performances) {
+            totalAmount += amountFor(perf);
+        }
+        return totalAmount;
+    }
 
     function totalVolumeCredits() {
         let volumeCredits = 0;
