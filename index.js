@@ -7,17 +7,22 @@ const plays = require("./plays.json");
 // 2. 결과를 텍스트나 HTML로 표현(포맷팅 단계)
 
 function statement(invoice, plays) {
+    return renderPlainText(createStatementData(invoice, plays));
+}
+
+// '데이터 처리'에 해당하는 코드를 모두 별도 함수로 빼냄
+function createStatementData(invoice, plays) {
     const statementData = {};
     statementData.customer = invoice.customer;
     statementData.performances = invoice.performances.map(enrichPerformance);
     statementData.totalAmount = totalAmount(statementData);
     statementData.totalVolumeCredits = totalVolumeCredits(statementData);
-    return renderPlainText(statementData);
+    return statementData;
 
     function enrichPerformance(aPerformance) {
         const result = Object.assign({}, aPerformance);
         result.play = playFor(result);
-        result.amount = amountFor(result); // 청구금액도 중간 데이터 구조에서 가져오도록 함
+        result.amount = amountFor(result);
         result.volumeCredits = volumeCreditsFor(result);
         return result;
     }
