@@ -11,7 +11,7 @@ function statement(invoice, plays) {
     }).format;
 
     for (let perf of invoice.performances) {
-        let thisAmount = amountFor(perf, playFor(perf)); // 변수 인라인하기
+        let thisAmount = amountFor(perf);
 
         // 포인트를 적립한다.
         volumeCredits += Math.max(perf.audience - 30, 0);
@@ -33,7 +33,7 @@ function statement(invoice, plays) {
         return plays[aPerformance.playID];
     }
 
-    function amountFor(aPerformance, play) {
+    function amountFor(aPerformance) { // 함수 선언 바꾸기
         let result = 0;
 
         switch (playFor(aPerformance).type) {
