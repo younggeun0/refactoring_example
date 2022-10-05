@@ -1,7 +1,16 @@
 const invoices = require("./invoices.json");
 const plays = require("./plays.json");
 
+// 리팩터링한 계산 함수들을 사용하여 HTML 결과를 출력하는 기능을 추가하고 싶음
+// 이를 위해 단개 쪼개기를 사용
+// 1. 필요한 데이터를 처리(계산 단계)
+// 2. 결과를 텍스트나 HTML로 표현(포맷팅 단계)
+
 function statement(invoice, plays) {
+    return renderPlainText(invoice, plays); // 두 번째 단계가 될 함수 추출하기
+}
+
+function renderPlainText(invoice, plays) {
     let result = `청구 내역 (고객명: ${invoice.customer})\n`;
 
     for (let perf of invoice.performances) {
@@ -14,7 +23,6 @@ function statement(invoice, plays) {
     return result;
 
 
-    // 여기서부터 중첩 함수 시작... 난무하는 중첩 함수
     function totalAmount() {
         let result = 0;
         for (let perf of invoice.performances) {
