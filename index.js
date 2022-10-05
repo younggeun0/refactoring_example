@@ -10,21 +10,20 @@ function statement(invoice, plays) {
         volumeCredits += volumeCreditsFor(perf);
 
         // 청구 내역을 출력한다.
-        result += ` ${playFor(perf).name}: ${format(amountFor(perf)/100)} (${perf.audience}석)\n`;
+        result += ` ${playFor(perf).name}: ${usd(amountFor(perf))} (${perf.audience}석)\n`;
         totalAmount += amountFor(perf);
     }
 
-    result += `총액: ${format(totalAmount / 100)}\n`;
+    result += `총액: ${usd(totalAmount)}\n`;
     result += `적립 포인트: ${volumeCredits}\n`;
     return result;
 
 
-    // 임시 변수를 함수로 직접 선언해 사용하도록 변경
-    function format(aNumber) {
+    function usd(aNumber) { // 함수 선언 바꾸기
         return new Intl.NumberFormat("en-US", {
             style: "currency", currency: "USD",
             minimumFractionDigits: 2
-        }).format(aNumber);
+        }).format(aNumber/100); // 단위 변환 로직도 함수 안으로 이동
     }
 
     function volumeCreditsFor(aPerformance) {
