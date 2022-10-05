@@ -6,12 +6,14 @@ function statement(invoice, plays) {
     let volumeCredits = 0;
     let result = `청구 내역 (고객명: ${invoice.customer})\n`;
 
+    // 반복문 쪼개기
     for (let perf of invoice.performances) {
-        volumeCredits += volumeCreditsFor(perf);
-
         // 청구 내역을 출력한다.
         result += ` ${playFor(perf).name}: ${usd(amountFor(perf))} (${perf.audience}석)\n`;
         totalAmount += amountFor(perf);
+    }
+    for (let perf of invoice.performances) {
+        volumeCredits += volumeCreditsFor(perf);
     }
 
     result += `총액: ${usd(totalAmount)}\n`;
@@ -19,11 +21,11 @@ function statement(invoice, plays) {
     return result;
 
 
-    function usd(aNumber) { // 함수 선언 바꾸기
+    function usd(aNumber) {
         return new Intl.NumberFormat("en-US", {
             style: "currency", currency: "USD",
             minimumFractionDigits: 2
-        }).format(aNumber/100); // 단위 변환 로직도 함수 안으로 이동
+        }).format(aNumber/100);
     }
 
     function volumeCreditsFor(aPerformance) {
