@@ -47,8 +47,15 @@ function usd(aNumber) {
 // main
 invoices.forEach(invoice => {
     const result = statement(invoice, plays);
-    console.log(result);
-
     const result2 = htmlStatement(invoice, plays);
-    console.log(result2);
+
+    assert(result, result2)
 });
+
+function assert(input1, input2) {
+    const output1 = "청구 내역 (고객명: BigCo)\n Hamlet: $650.00 (55석)\n As You Like it: $580.00 (35석)\n Othello: $500.00 (40석)\n총액: $1,730.00\n적립 포인트: 47\n";
+    console.assert(input1 === output1, "[Assertion] input1 !== output1");
+
+    const output2 = "<h1>청구내역 (고객명: BigCo)</h1>\n<table>\n<tr><th>연극</th><th>좌석 수</th><th>금액</th></tr> <tr><td>Hamlet</td><td>(55석)</td><td>$650.00</td></tr>\n <tr><td>As You Like it</td><td>(35석)</td><td>$580.00</td></tr>\n <tr><td>Othello</td><td>(40석)</td><td>$500.00</td></tr>\n</table>\n<p>총액: <em>$1,730.00</em></p>\n<p>적립 포인트: <em>47</em>점</p>\n";
+    console.assert(input2 === output2, "[Assertion] input2 !== output2");
+}
