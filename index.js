@@ -49,6 +49,10 @@ function statement(invoice, plays) {
 }
 
 invoices.forEach(invoice => {
-    const result = statement(invoice, plays);
+    const input1 = statement(invoice, plays);
+    const result =
+        "청구 내역 (고객명: BigCo)\n Hamlet: $650.00 (55석)\n As You Like it: $580.00 (35석)\n Othello: $500.00 (40석)\n총액: $1,730.00\n적립 포인트: 47\n";
+    console.assert(input1 === result, "[Assertion] input1 !== output1");
+
     console.log(result);
 });
