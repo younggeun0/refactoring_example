@@ -35,6 +35,8 @@ class PerformanceCalculator:
 
         return result
 
+def create_performance_calculator(a_performance, a_play):
+    return PerformanceCalculator(a_performance, a_play)
 
 def create_statement_data(invoice, plays):
     def play_for(perf):
@@ -43,7 +45,7 @@ def create_statement_data(invoice, plays):
 
 
     def enrich_performance(a_performance):
-        calculator = PerformanceCalculator(a_performance, play_for(a_performance))
+        calculator = create_performance_calculator(a_performance, play_for(a_performance))
 
         result = a_performance.copy()
         result['play'] = calculator.play
