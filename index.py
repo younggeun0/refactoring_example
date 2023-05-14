@@ -40,19 +40,23 @@ def statement(invoice, plays):
     def play_for(perf):
         return plays[perf['playID']]
 
+    def volume_credits_for(perf):
+        result = max(perf['audience'] - 30, 0)
+
+        # 희극 관객 5명마다 추가 포인트를 제공한다.
+        if 'comedy' == play_for(perf)['type']:
+            result += perf['audience'] // 5
+
+        return result
+
+
     total_amount = 0
     volume_credits = 0
     result = f"청구 내역 (고객명: {invoice['customer']})\n"
 
-    
     for perf in invoice['performances']:
         # 포인트를 적립한다.
-        volume_credits += max(perf['audience'] - 30, 0)
-
-        # 희극 관객 5명마다 추가 포인트를 제공한다.
-        if 'comedy' == play_for(perf)['type']:
-            volume_credits += perf['audience'] // 5
-
+        volume_credits += volume_credits_for(perf)
         # 청구 내역을 출력한다.
         result += f"  {play_for(perf)['name']}: ${amount_for(perf)/100:.2f} ({perf['audience']} 석)\n"
         total_amount += amount_for(perf)
