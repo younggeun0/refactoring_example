@@ -65,16 +65,10 @@ def statement(invoice, plays):
     
 def render_plain_text(data):
     def total_volume_credit():
-        result = 0
-        for perf in data['performances']:
-            result += perf['volume_credits']
-        return result
+        return sum([perf['volume_credits'] for perf in data['performances']])
     
     def total_amount():
-        result = 0
-        for perf in data['performances']:
-            result += perf['amount']
-        return result
+        return sum([perf['amount'] for perf in data['performances']])
 
 
     result = f"청구 내역 (고객명: {data['customer']})\n"
