@@ -22,6 +22,14 @@ class TestStatement(unittest.TestCase):
 """)
 
 def statement(invoice, plays):
+    statement_data = {}
+    statement_data['customer'] = invoice['customer']
+    statement_data['performances'] = invoice['performances'].copy()
+
+    return render_plain_text(statement_data, plays)
+
+
+def render_plain_text(data, plays):
     def amount_for(perf):
         result = 0
 
@@ -51,20 +59,20 @@ def statement(invoice, plays):
     
     def total_volume_credit():
         result = 0
-        for perf in invoice['performances']:
+        for perf in data['performances']:
             result += volume_credits_for(perf)
         return result
     
     def total_amount():
         result = 0
-        for perf in invoice['performances']:
+        for perf in data['performances']:
             result += amount_for(perf)
         return result
 
 
-    result = f"청구 내역 (고객명: {invoice['customer']})\n"
+    result = f"청구 내역 (고객명: {data['customer']})\n"
 
-    for perf in invoice['performances']:
+    for perf in data['performances']:
         # 청구 내역을 출력한다.
         result += f"  {play_for(perf)['name']}: ${amount_for(perf)/100:.2f} ({perf['audience']} 석)\n"
 
