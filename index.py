@@ -55,20 +55,23 @@ def statement(invoice, plays):
         result['amount'] = amount_for(result)
         result['volume_credits'] = volume_credits_for(result)
         return result
+    
+    def total_volume_credit(data):
+        return sum([perf['volume_credits'] for perf in data['performances']])
+    
+    def total_amount(data):
+        return sum([perf['amount'] for perf in data['performances']])
 
     statement_data = {}
     statement_data['customer'] = invoice['customer']
     statement_data['performances'] = list(map(enrich_performance, invoice['performances']))
+    statement_data['total_amount'] = total_amount(statement_data)
+    statement_data['total_volume_credit'] = total_volume_credit(statement_data)
 
     return render_plain_text(statement_data)
 
     
 def render_plain_text(data):
-    def total_volume_credit():
-        return sum([perf['volume_credits'] for perf in data['performances']])
-    
-    def total_amount():
-        return sum([perf['amount'] for perf in data['performances']])
 
 
     result = f"청구 내역 (고객명: {data['customer']})\n"
@@ -78,10 +81,9 @@ def render_plain_text(data):
         result += f"  {perf['play']['name']}: ${perf['amount']/100:.2f} ({perf['audience']} 석)\n"
 
 
-    result += f"총액: ${total_amount()/100:.2f}\n"
-    result += f"적립 포인트: {total_volume_credit()}\n"
+    result += f"총액: ${data['total_amount']/100:.2f}\n"
+    result += f"적립 포인트: {data['total_volume_credit']}\n"
     return result
-
 
 
 if __name__ == "__main__":
