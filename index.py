@@ -46,18 +46,17 @@ def statement(invoice, plays):
 
     
     for perf in invoice['performances']:
-        play = play_for(perf)
         this_amount = amount_for(perf)
 
         # 포인트를 적립한다.
         volume_credits += max(perf['audience'] - 30, 0)
 
         # 희극 관객 5명마다 추가 포인트를 제공한다.
-        if 'comedy' == play['type']:
+        if 'comedy' == play_for(perf)['type']:
             volume_credits += perf['audience'] // 5
 
         # 청구 내역을 출력한다.
-        result += f"  {play['name']}: ${this_amount/100:.2f} ({perf['audience']} 석)\n"
+        result += f"  {play_for(perf)['name']}: ${this_amount/100:.2f} ({perf['audience']} 석)\n"
         total_amount += this_amount
 
     result += f"총액: ${total_amount/100:.2f}\n"
