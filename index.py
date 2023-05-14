@@ -22,6 +22,9 @@ class TestStatement(unittest.TestCase):
 """)
 
 def statement(invoice, plays):
+    return render_plain_text(create_statement_data(invoice, plays))
+
+def create_statement_data(invoice, plays):
     def play_for(perf):
         return plays[perf['playID']]
     
@@ -68,8 +71,7 @@ def statement(invoice, plays):
     statement_data['total_amount'] = total_amount(statement_data)
     statement_data['total_volume_credit'] = total_volume_credit(statement_data)
 
-    return render_plain_text(statement_data)
-
+    return statement_data
     
 def render_plain_text(data):
 
