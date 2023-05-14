@@ -3,40 +3,45 @@ class PerformanceCalculator:
         self.performance = a_performance
         self.play = a_play
 
-    # def amount(self):
-    #     raise NotImplementedError
-
-    # def volume_credits(self):
-    #     return max(self.performance['audience'] - 30, 0)
-
     @property
     def amount(self):
-        result = 0
-
-        if self.play['type'] == 'tragedy':
-            result = 40000
-            if self.performance['audience'] > 30:
-                result += 1000 * (self.performance['audience'] - 30)
-        elif self.play['type'] == 'comedy':
-            result = 30000
-            if self.performance['audience'] > 20:
-                result += 10000 + 500 * (self.performance['audience'] - 20)
-            result += 300 * self.performance['audience']
-        
-        return result 
+        raise NotImplementedError
 
     @property
     def volume_credits(self ):
-        result = max(self.performance['audience'] - 30, 0)
-
-        # 희극 관객 5명마다 추가 포인트를 제공한다.
-        if 'comedy' == self.play['type']:
-            result += self.performance['audience'] // 5
-
+        return max(self.performance['audience'] - 30, 0)
+    
+class TragedyCalculator(PerformanceCalculator):
+    @property
+    def amount(self):
+        result = 40000
+        if self.performance['audience'] > 30:
+            result += 1000 * (self.performance['audience'] - 30)
+        
         return result
+    
+class ComedyCalculator(PerformanceCalculator):
+    @property
+    def amount(self):
+        result = 30000
+        if self.performance['audience'] > 20:
+            result += 10000 + 500 * (self.performance['audience'] - 20)
+        result += 300 * self.performance['audience']
+    
+        return result
+    
+    @property
+    def volume_credits(self):
+        return super().volume_credits + self.performance['audience'] // 5
+    
 
 def create_performance_calculator(a_performance, a_play):
-    return PerformanceCalculator(a_performance, a_play)
+    if a_play['type'] == 'tragedy':
+        return TragedyCalculator(a_performance, a_play)
+    elif a_play['type'] == 'comedy':
+        return ComedyCalculator(a_performance, a_play)
+    else:
+        raise Exception(f"알 수 없는 장르: {a_play['type']}")
 
 def create_statement_data(invoice, plays):
     def play_for(perf):
