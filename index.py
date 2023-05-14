@@ -22,25 +22,29 @@ class TestStatement(unittest.TestCase):
 """)
 
 def statement(invoice, plays):
+    def amount_for(perf, play):
+        result = 0
+
+        if play['type'] == 'tragedy':
+            result = 40000
+            if perf['audience'] > 30:
+                result += 1000 * (perf['audience'] - 30)
+        elif play['type'] == 'comedy':
+            result = 30000
+            if perf['audience'] > 20:
+                result += 10000 + 500 * (perf['audience'] - 20)
+            result += 300 * perf['audience']
+        
+        return result 
+
+
     total_amount = 0
     volume_credits = 0
     result = f"청구 내역 (고객명: {invoice['customer']})\n"
 
     for perf in invoice['performances']:
         play = plays[perf['playID']]
-        this_amount = 0
-
-        if play['type'] == 'tragedy':
-            this_amount = 40000
-            if perf['audience'] > 30:
-                this_amount += 1000 * (perf['audience'] - 30)
-        elif play['type'] == 'comedy':
-            this_amount = 30000
-            if perf['audience'] > 20:
-                this_amount += 10000 + 500 * (perf['audience'] - 20)
-            this_amount += 300 * perf['audience']
-        else:
-            raise Exception(f"알 수 없는 장르: {play['type']}")
+        this_amount = amount_for(perf, play)
 
         # 포인트를 적립한다.
         volume_credits += max(perf['audience'] - 30, 0)
@@ -56,6 +60,7 @@ def statement(invoice, plays):
     result += f"총액: ${total_amount/100:.2f}\n"
     result += f"적립 포인트: {volume_credits}\n"
     return result
+
 
 
 if __name__ == "__main__":
