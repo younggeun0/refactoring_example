@@ -54,18 +54,22 @@ def statement(invoice, plays):
         for perf in invoice['performances']:
             result += volume_credits_for(perf)
         return result
+    
+    def total_amount():
+        result = 0
+        for perf in invoice['performances']:
+            result += amount_for(perf)
+        return result
 
-    total_amount = 0
+
     result = f"청구 내역 (고객명: {invoice['customer']})\n"
-
 
     for perf in invoice['performances']:
         # 청구 내역을 출력한다.
         result += f"  {play_for(perf)['name']}: ${amount_for(perf)/100:.2f} ({perf['audience']} 석)\n"
-        total_amount += amount_for(perf)
 
 
-    result += f"총액: ${total_amount/100:.2f}\n"
+    result += f"총액: ${total_amount()/100:.2f}\n"
     result += f"적립 포인트: {total_volume_credit()}\n"
     return result
 
