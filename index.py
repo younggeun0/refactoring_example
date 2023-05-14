@@ -22,14 +22,14 @@ class TestStatement(unittest.TestCase):
 """)
 
 def statement(invoice, plays):
-    def amount_for(perf, play):
+    def amount_for(perf):
         result = 0
 
-        if play['type'] == 'tragedy':
+        if play_for(perf)['type'] == 'tragedy':
             result = 40000
             if perf['audience'] > 30:
                 result += 1000 * (perf['audience'] - 30)
-        elif play['type'] == 'comedy':
+        elif play_for(perf)['type'] == 'comedy':
             result = 30000
             if perf['audience'] > 20:
                 result += 10000 + 500 * (perf['audience'] - 20)
@@ -37,14 +37,17 @@ def statement(invoice, plays):
         
         return result 
 
+    def play_for(perf):
+        return plays[perf['playID']]
 
     total_amount = 0
     volume_credits = 0
     result = f"청구 내역 (고객명: {invoice['customer']})\n"
 
+    
     for perf in invoice['performances']:
-        play = plays[perf['playID']]
-        this_amount = amount_for(perf, play)
+        play = play_for(perf)
+        this_amount = amount_for(perf)
 
         # 포인트를 적립한다.
         volume_credits += max(perf['audience'] - 30, 0)
