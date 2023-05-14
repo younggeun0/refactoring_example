@@ -22,14 +22,9 @@ class TestStatement(unittest.TestCase):
 """)
 
 def statement(invoice, plays):
-    statement_data = {}
-    statement_data['customer'] = invoice['customer']
-    statement_data['performances'] = invoice['performances'].copy()
-
-    return render_plain_text(statement_data, plays)
-
-
-def render_plain_text(data, plays):
+    def play_for(perf):
+        return plays[perf['playID']]
+    
     def amount_for(perf):
         result = 0
 
@@ -45,9 +40,6 @@ def render_plain_text(data, plays):
         
         return result 
 
-    def play_for(perf):
-        return plays[perf['playID']]
-
     def volume_credits_for(perf):
         result = max(perf['audience'] - 30, 0)
 
@@ -56,17 +48,32 @@ def render_plain_text(data, plays):
             result += perf['audience'] // 5
 
         return result
+
+    def enrich_performance(a_performance):
+        result = a_performance.copy()
+        result['play'] = play_for(result)
+        result['amount'] = amount_for(result)
+        result['volume_credits'] = volume_credits_for(result)
+        return result
+
+    statement_data = {}
+    statement_data['customer'] = invoice['customer']
+    statement_data['performances'] = list(map(enrich_performance, invoice['performances']))
+
+    return render_plain_text(statement_data)
+
     
+def render_plain_text(data):
     def total_volume_credit():
         result = 0
         for perf in data['performances']:
-            result += volume_credits_for(perf)
+            result += perf['volume_credits']
         return result
     
     def total_amount():
         result = 0
         for perf in data['performances']:
-            result += amount_for(perf)
+            result += perf['amount']
         return result
 
 
@@ -74,7 +81,7 @@ def render_plain_text(data, plays):
 
     for perf in data['performances']:
         # 청구 내역을 출력한다.
-        result += f"  {play_for(perf)['name']}: ${amount_for(perf)/100:.2f} ({perf['audience']} 석)\n"
+        result += f"  {perf['play']['name']}: ${perf['amount']/100:.2f} ({perf['audience']} 석)\n"
 
 
     result += f"총액: ${total_amount()/100:.2f}\n"
